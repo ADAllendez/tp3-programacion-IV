@@ -1,0 +1,10 @@
+import api from './axiosConfig';
+export const getViajes = () => api.get('/viajes');
+export const getViaje = (id) => api.get(`/viajes/${id}`);
+export const createViaje = (data) => api.post('/viajes', data);
+export const updateViaje = (id, data) => api.put(`/viajes/${id}`, data);
+export const deleteViaje = (id) => api.delete(`/viajes/${id}`);
+export const getViajesPorConductor = (id) => api.get(`/viajes/conductor/${id}`);
+export const getViajesPorVehiculo = (id) => api.get(`/viajes/vehiculo/${id}`);
+export const getKmPorConductor = (id) => api.get(`/viajes/km/conductor/${id}`);
+export const getKmPorVehiculo = (id) => api.get(`/viajes/km/vehiculo/${id}`);

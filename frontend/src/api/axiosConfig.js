@@ -1,11 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  // Apuntar al backend local (puerto 4000) y asegurar la barra final para concatenaciones
-  baseURL: "http://localhost:4000/api/",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "http://localhost:4000/api",
+  headers: { "Content-Type": "application/json" },
 });
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+}, (err) => Promise.reject(err));
 
 export default api;
