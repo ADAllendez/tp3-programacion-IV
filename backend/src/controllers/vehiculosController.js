@@ -1,6 +1,5 @@
 import * as vehiculosModel from '../models/vehiculosModel.js';
 
-
 export const vehiculosController = {
     getAll: async (req, res) => {
         try {
@@ -27,6 +26,7 @@ export const vehiculosController = {
             const vehiculo = await vehiculosModel.create(req.body);
             res.status(201).json(vehiculo);
         } catch (error) {
+            console.error("Error al crear vehículo:", error);
             res.status(500).json({ message: "Error al crear vehículo" });
         }
     },
@@ -36,6 +36,7 @@ export const vehiculosController = {
             const vehiculo = await vehiculosModel.update(id, req.body);
             res.json(vehiculo);
         } catch (error) {
+            console.error("Error al actualizar vehículo:", error);
             res.status(500).json({ message: "Error al actualizar vehículo" });
         }
     },
@@ -45,6 +46,7 @@ export const vehiculosController = {
             await vehiculosModel.remove(id);
             res.json({ message: "Vehículo eliminado correctamente" });
         } catch (error) {
+            console.error("Error al eliminar vehículo:", error);
             res.status(500).json({ message: "Error al eliminar vehículo" });
         }
     },
