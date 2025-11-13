@@ -1,46 +1,63 @@
-import bycrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import pool from '../config/db';
-import { createUser, findUserByEmail } from '../models/auth.js';
+import db from "../config/db.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-export const resgister = async (req, res) => {
+dotenv.config();
+
+export const register = async (req, res) => {
+  try {
     const { nombre, email, contrasena } = req.body;
 
-    try {
-    const userExists = await findUserByEmail(pool, email);
-    if (userExists) return res.status(400).json({ message: 'El email ya está registrado' });
+    const [userExist] = await db.query(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email]
+    );
+    if (userExist.length > 0) {
+      return res.status(400).json({ message: "El email ya está registrado" });
+    }
 
-    const contrasenaHash = await bcrypt.hash(contrasena, 10);
-    const userId = await createUser(pool, { nombre, email, contrasenaHash });
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    await db.query(
+      "INSERT INTO usuarios (nombre, email, contrasena) VALUES (?, ?, ?)",
+      [nombre, email, hashedPassword]
+    );
 
-    res.status(201).json({ message: 'Usuario registrado con éxito', id: userId });
-  } catch (err) {
-    res.status(500).json({ message: 'Error al registrar usuario', error: err.message });
+    res.status(201).json({ message: "Usuario registrado con éxito" });
+  } catch (error) {
+    console.error("Error en register:", error);
+    res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
-
 export const login = async (req, res) => {
-    const { email, contrasena } = req.body; 
-    try {
-        const user = await findUserByEmail(pool, email);
-        if (!user) {
-            return res.status(400).json({ mensaje: 'Credenciales inválidas' });
-        }
-        const isMatch = await bycrypt.compare(contrasena, user.contrasena);
-        if (!isMatch) {
-            return res.status(400).json({ mensaje: 'Credenciales inválidas' });
-        }
+  try {
+    const { email, contrasena } = req.body;
 
-        const token = jwt.sign(
-            { userId: user.id, nombre: user.nombre },
-            process.env.JWT_SECRET,
-            { expiresIn: '4h' }
-        );
+    const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [
+      email,
+    ]);
 
-        res.json({ mensaje: 'Login exitoso', token });
-    } catch (error) {
-        console.error('Error en el login:', error);
-        res.status(500).json({ mensaje: 'Error en el servidor' });
+    if (rows.length === 0) {
+      return res.status(400).json({ message: "Usuario no encontrado" });
     }
-}
+
+    const usuario = rows[0];
+    const esValida = await bcrypt.compare(contrasena, usuario.contrasena);
+
+    if (!esValida) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    const token = jwt.sign(
+      { id: usuario.id, email: usuario.email },
+      process.env.JWT_SECRET || "secreto",
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ message: "Login exitoso", token });
+  } catch (error) {
+    console.error("Error en login:", error);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+};

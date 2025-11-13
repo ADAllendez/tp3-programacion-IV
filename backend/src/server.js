@@ -1,18 +1,12 @@
-import app from './app.js';
-import pool from './config/db.js';
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routers/auth.js";
 
-const PORT = process.env.PORT || 4000;
+const app = express();
 
-const testDB = async () => {
-    try {
-        const [rows] = await pool.query('SELECT 1 + 1 AS result');
-        console.log('✅ Conexión a MySQL exitosa:', rows[0].result);
-    }catch (error) {
-        console.error('❌ Error de conexión a MySQL:', error);
-    }
-};
+app.use(cors());
+app.use(express.json());
 
-app.listen(PORT, async () => {
-    console.log(`🚀 Servidor backend corriendo en puerto ${PORT}`);
-    await testDB();
-});
+app.use("/api/auth", authRoutes);
+
+export default app;

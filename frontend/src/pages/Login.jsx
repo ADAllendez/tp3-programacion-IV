@@ -5,9 +5,10 @@ import { loginUser } from "../api/auth.js";
 import "../App.css";
 
 export default function Login() {
+  // el backend espera el campo 'contrasena'
   const [form, setForm] = useState({
     email: "",
-    password: "",
+    contrasena: "",
   });
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
@@ -19,8 +20,26 @@ export default function Login() {
     });
   };
 
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const errs = {};
+    // Validación sencilla sin regex: comprobar que el email contiene '@' y '.'
+    if (!form.email || !form.email.includes('@') || !form.email.includes('.')) errs.email = "Email no válido";
+    if (!form.contrasena || !form.contrasena.trim()) errs.contrasena = "La contraseña es obligatoria";
+    return errs;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMsg("");
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
+
     const res = await loginUser(form);
     if (res.ok && res.token) {
       localStorage.setItem("token", res.token);
@@ -33,21 +52,27 @@ export default function Login() {
   return (
     <div className="form-container">
       <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <input
           type="email"
           name="email"
           placeholder="Email"
           onChange={handleChange}
-          required
+          value={form.email}
+          aria-invalid={!!errors.email}
         />
+        {errors.email && <small style={{ color: 'red' }}>{errors.email}</small>}
+
         <input
           type="password"
-          name="password"
+          name="contrasena"
           placeholder="Contraseña"
           onChange={handleChange}
-          required
+          value={form.contrasena}
+          aria-invalid={!!errors.contrasena}
         />
+        {errors.contrasena && <small style={{ color: 'red' }}>{errors.contrasena}</small>}
+
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p style={{margin: "10px"}}> 
