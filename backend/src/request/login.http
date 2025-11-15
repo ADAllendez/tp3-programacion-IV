@@ -1,0 +1,27 @@
+@api = http://localhost:4000/api/auth
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmlvQGdtYWlsLmNvbSIsImlhdCI6MTc2MzE2MDQ4NiwiZXhwIjoxNzYzMTY0MDg2fQ.kNgru4tPGMXYOuBS6UmXqxODF9O9Q3p9RmydhJwlTEY
+
+### Registro
+POST {{api}}/register
+Content-Type: {{contentType}}
+
+{
+  "nombre": "Mario",
+  "apellido": "aaa",
+  "email": "mario@gmail.com",
+  "contrasena": "1234567"
+}
+
+### Login
+POST {{api}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "mario@gmail.com",
+  "contrasena": "1234567"
+}
+
+### Ver usuario logueado (requiere token)
+GET {{api}}/me
+Authorization: Bearer {{token}}

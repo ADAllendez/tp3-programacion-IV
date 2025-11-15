@@ -5,15 +5,16 @@ import {
     crearConductor,
     actualizarConductor,
     eliminarConductor
+} from '../controllers/conductoresController.js';
 
-}from '../controllers/conductoresController.js';
+import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', obtenerConductores);
-router.get('/:id', obtenerConductorId);
-router.post('/', crearConductor);
-router.put('/:id', actualizarConductor);
-router.delete('/:id', eliminarConductor);
+router.get('/', verifyToken, obtenerConductores);
+router.get('/:id', verifyToken, obtenerConductorId);
+router.post('/', verifyToken, crearConductor);
+router.put('/:id', verifyToken, actualizarConductor);
+router.delete('/:id', verifyToken, eliminarConductor);
 
 export default router;

@@ -1,0 +1,41 @@
+@api = http://localhost:4000/api/vehiculos
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmlvQGdtYWlsLmNvbSIsImlhdCI6MTc2MzE2MDQ4NiwiZXhwIjoxNzYzMTY0MDg2fQ.kNgru4tPGMXYOuBS6UmXqxODF9O9Q3p9RmydhJwlTEY
+
+### Listar vehículos
+GET {{api}}
+Authorization: Bearer {{token}}
+
+### Obtener vehículo por ID
+GET {{api}}/3
+Authorization: Bearer {{token}}
+
+### Crear vehículo
+POST {{api}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "marca": "Ford",
+  "modelo": "Falcon",
+  "anio": 1999,
+  "patente": "ABC1223",
+  "capacidad_carga": 1300
+}
+
+### Modificar vehículo
+PUT {{api}}/3
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "marca": "Ford",
+  "modelo": "Transit XL",
+  "patente": "ABC123",
+  "anio": 2021,
+  "capacidad_carga": 1800
+}
+
+### Eliminar vehículo
+DELETE {{api}}/1
+Authorization: Bearer {{token}}

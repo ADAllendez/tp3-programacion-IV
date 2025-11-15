@@ -10,17 +10,18 @@ import {
   getKmPorVehiculo
 } from '../controllers/viajesController.js';
 
+import { verifyToken } from "../middleware/auth.js";
+
 const router = express.Router();
 
-router.get('/', getViajes);
-router.post('/', createViaje);
-router.put('/:id', updateViaje);
-router.delete('/:id', deleteViaje);
+router.get('/', verifyToken, getViajes);
+router.post('/', verifyToken, createViaje);
+router.put('/:id', verifyToken, updateViaje);
+router.delete('/:id', verifyToken, deleteViaje);
 
-// 🔍 Consultas adicionales
-router.get('/conductor/:id_conductor', getViajesPorConductor);
-router.get('/vehiculo/:id_vehiculo', getViajesPorVehiculo);
-router.get('/kilometros/conductor/:id_conductor', getKmPorConductor);
-router.get('/kilometros/vehiculo/:id_vehiculo', getKmPorVehiculo);
+router.get('/conductor/:id_conductor', verifyToken, getViajesPorConductor);
+router.get('/vehiculo/:id_vehiculo', verifyToken, getViajesPorVehiculo);
+router.get('/kilometros/conductor/:id_conductor', verifyToken, getKmPorConductor);
+router.get('/kilometros/vehiculo/:id_vehiculo', verifyToken, getKmPorVehiculo);
 
 export default router;

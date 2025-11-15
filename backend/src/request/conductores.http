@@ -1,0 +1,50 @@
+@url = http://localhost:4000
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmlvQGdtYWlsLmNvbSIsImlhdCI6MTc2MzE2MDQ4NiwiZXhwIjoxNzYzMTY0MDg2fQ.kNgru4tPGMXYOuBS6UmXqxODF9O9Q3p9RmydhJwlTEY
+
+### Obtener todos los conductores
+GET {{url}}/api/conductores
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+###
+
+### Obtener conductor por ID
+GET {{url}}/api/conductores/3
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+###
+
+### Crear conductor
+POST {{url}}/api/conductores
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan Perez",
+  "apellido": "Lopez",
+  "dni": "12345678",
+  "licencia": "B12345",
+  "vencimiento_licencia": "2026-12-31"
+}
+
+###
+
+### Actualizar conductor
+PUT {{url}}/api/conductores/3
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Pedro",
+  "apellido": "Gomez",
+  "dni": "12345678",
+  "licencia": "B12345",
+  "vencimiento_licencia": "2026-12-31"
+}
+
+###
+
+### Eliminar conductor
+DELETE {{url}}/api/conductores/1

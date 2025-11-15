@@ -1,13 +1,13 @@
 import express from 'express';
-import  {vehiculosController}  from '../controllers/vehiculosController.js';
+import { vehiculosController } from '../controllers/vehiculosController.js';
+import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-
-router.get('/', vehiculosController.getAll);
-router.get('/:id', vehiculosController.getById);
-router.post('/', vehiculosController.create);
-router.put('/:id', vehiculosController.update);
-router.delete('/:id', vehiculosController.remove);
+router.get('/', verifyToken, vehiculosController.getAll);
+router.get('/:id', verifyToken, vehiculosController.getById);
+router.post('/', verifyToken, vehiculosController.create);
+router.put('/:id', verifyToken, vehiculosController.update);
+router.delete('/:id', verifyToken, vehiculosController.remove);
 
 export default router;
