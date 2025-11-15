@@ -19,8 +19,7 @@ Proyecto fullstack para administrar **vehículos, conductores y viajes**, con AP
 ### Backend
 ```
 cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --port 3000
+npm run dev
 ```
 
 ### Frontend
